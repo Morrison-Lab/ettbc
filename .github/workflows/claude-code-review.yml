@@ -1,4 +1,4 @@
-# Migrated to the reusable workflow in d-morrison/gha (claude-code-review.yml).
+# Migrated to the reusable workflow in Morrison-Lab/gha (claude-code-review.yml).
 # The reusable workflow carries the reviewer stash/restore, the inline-comment
 # tool allowlist, review-only enforcement, the collapse/cancel handling, and the
 # workflow_dispatch path claude.yml uses to re-dispatch a review after pushing
@@ -22,7 +22,7 @@ jobs:
       pull-requests: write
       issues: write
       id-token: write
-    uses: d-morrison/gha/.github/workflows/claude-code-review.yml@v1
+    uses: Morrison-Lab/gha/.github/workflows/claude-code-review.yml@v1
     # Pass secrets explicitly rather than `secrets: inherit` (cross-owner
     # caller -> reusable workflow; see claude.yml for the rationale).
     secrets:
