@@ -1,5 +1,10 @@
 # ettbc (development version)
 
+* Repointed the reusable GitHub Actions workflows from `d-morrison/gha` to
+  `Morrison-Lab/gha`, following that repo's move.
+  Actions does not follow repository-rename redirects for `uses:`, so the
+  calls were failing to resolve before any job started.
+
 * Added `apply_eligibility_criteria()`, the cohort eligibility/enrollment
   logic from García-Albéniz et al. (SAS `c01_eligibility.sas`, item 3).
   Given a demographics table, a monthly enrollment table, and screening
