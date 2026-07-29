@@ -1,7 +1,7 @@
 # ettbc (development version)
 
-* Repointed the reusable GitHub Actions workflows from `d-morrison/gha` to
-  `Morrison-Lab/gha`, following that repo's move.
+* Updated the reusable GitHub Actions workflows to call `Morrison-Lab/gha`
+  instead of `d-morrison/gha`, following that repository's move.
   Actions does not follow repository-rename redirects for `uses:`, so the
   calls were failing to resolve before any job started.
 
