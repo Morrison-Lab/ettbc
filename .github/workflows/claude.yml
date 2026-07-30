@@ -1,4 +1,4 @@
-# Migrated to the reusable workflow in d-morrison/gha (claude.yml).
+# Migrated to the reusable workflow in Morrison-Lab/gha (claude.yml).
 #
 # The reusable workflow carries the agent-mode machinery: the @claude
 # acknowledgment, per-PR concurrency, the late-comment polling loop, branch
@@ -34,7 +34,7 @@ jobs:
       # claude-code-review.yml via workflow_dispatch after pushing commits;
       # triggering a workflow dispatch needs Actions write, not just read.
       actions: write
-    uses: d-morrison/gha/.github/workflows/claude.yml@v1
+    uses: Morrison-Lab/gha/.github/workflows/claude.yml@v1
     # Pass secrets explicitly rather than `secrets: inherit`: this caller lives
     # in the ucdavis org but the reusable workflow is in the d-morrison account,
     # and cross-owner `inherit` does not reliably forward repo secrets. Explicit
