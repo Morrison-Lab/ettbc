@@ -6,13 +6,13 @@
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/quarto-contrib/div-anchors-1.0.0/div-anchors.js"></script>
 <link href="../../site_libs/quarto-contrib/div-anchors-1.0.0/div-anchors.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.38">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Douglas Ezra Morrison">
-  <meta name="dcterms.date" content="2026-07-02">
+  <meta name="dcterms.date" content="2026-07-30">
   <title>ettbc – Using ettbc: Emulating a Target Trial for Breast Cancer Screening</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -23,10 +23,13 @@
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
-    code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -224,12 +227,12 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Douglas Ezra Morrison 
+Douglas Ezra Morrison
 </div>
 </div>
 </div>
 
-  <p class="date">2026-07-02</p>
+  <p class="date">2026-07-30</p>
 </section>
 <section id="background" class="slide level2 scrollable" data-number="1">
 <h2><span class="header-section-number">1</span> Background</h2>
@@ -256,57 +259,57 @@ Douglas Ezra Morrison
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="co"># One row per participant</span></span>
-<span id="cb1-2"><a></a><span class="fu">head</span>(cohort)</span>
-<span id="cb1-3"><a></a><span class="co">#&gt;   id age start_month end_month death_month bc_death bc_month</span></span>
-<span id="cb1-4"><a></a><span class="co">#&gt; 1  1  81          26       108          NA        0       NA</span></span>
-<span id="cb1-5"><a></a><span class="co">#&gt; 2  2  81          33       108          NA        0       NA</span></span>
-<span id="cb1-6"><a></a><span class="co">#&gt; 3  3  76          28       108          NA        0       NA</span></span>
-<span id="cb1-7"><a></a><span class="co">#&gt; 4  4  75           1       108          NA        0       NA</span></span>
-<span id="cb1-8"><a></a><span class="co">#&gt; 5  5  77          17       108          NA        0       NA</span></span>
-<span id="cb1-9"><a></a><span class="co">#&gt; 6  6  70          40       108          NA        0       NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="co"># One row per participant</span></span>
+<span id="cb1-2"><a aria-label="2"></a><span class="fu">head</span>(cohort)</span>
+<span id="cb1-3"><a aria-label="3"></a><span class="co">#&gt;   id age start_month end_month death_month bc_death bc_month</span></span>
+<span id="cb1-4"><a aria-label="4"></a><span class="co">#&gt; 1  1  81          26       108          NA        0       NA</span></span>
+<span id="cb1-5"><a aria-label="5"></a><span class="co">#&gt; 2  2  81          33       108          NA        0       NA</span></span>
+<span id="cb1-6"><a aria-label="6"></a><span class="co">#&gt; 3  3  76          28       108          NA        0       NA</span></span>
+<span id="cb1-7"><a aria-label="7"></a><span class="co">#&gt; 4  4  75           1       108          NA        0       NA</span></span>
+<span id="cb1-8"><a aria-label="8"></a><span class="co">#&gt; 5  5  77          17       108          NA        0       NA</span></span>
+<span id="cb1-9"><a aria-label="9"></a><span class="co">#&gt; 6  6  70          40       108          NA        0       NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># One row per screening mammogram event</span></span>
-<span id="cb2-2"><a></a><span class="fu">head</span>(screening_mammograms)</span>
-<span id="cb2-3"><a></a><span class="co">#&gt;   id month</span></span>
-<span id="cb2-4"><a></a><span class="co">#&gt; 1  1    16</span></span>
-<span id="cb2-5"><a></a><span class="co">#&gt; 2  1    38</span></span>
-<span id="cb2-6"><a></a><span class="co">#&gt; 3  1    50</span></span>
-<span id="cb2-7"><a></a><span class="co">#&gt; 4  1    63</span></span>
-<span id="cb2-8"><a></a><span class="co">#&gt; 5  1    77</span></span>
-<span id="cb2-9"><a></a><span class="co">#&gt; 6  1    88</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="co"># One row per screening mammogram event</span></span>
+<span id="cb2-2"><a aria-label="2"></a><span class="fu">head</span>(screening_mammograms)</span>
+<span id="cb2-3"><a aria-label="3"></a><span class="co">#&gt;   id month</span></span>
+<span id="cb2-4"><a aria-label="4"></a><span class="co">#&gt; 1  1    16</span></span>
+<span id="cb2-5"><a aria-label="5"></a><span class="co">#&gt; 2  1    38</span></span>
+<span id="cb2-6"><a aria-label="6"></a><span class="co">#&gt; 3  1    50</span></span>
+<span id="cb2-7"><a aria-label="7"></a><span class="co">#&gt; 4  1    63</span></span>
+<span id="cb2-8"><a aria-label="8"></a><span class="co">#&gt; 5  1    77</span></span>
+<span id="cb2-9"><a aria-label="9"></a><span class="co">#&gt; 6  1    88</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># One row per diagnostic mammogram event</span></span>
-<span id="cb3-2"><a></a><span class="fu">head</span>(diagnostic_mammograms)</span>
-<span id="cb3-3"><a></a><span class="co">#&gt;   id month</span></span>
-<span id="cb3-4"><a></a><span class="co">#&gt; 1 98    46</span></span>
-<span id="cb3-5"><a></a><span class="co">#&gt; 2  4    55</span></span>
-<span id="cb3-6"><a></a><span class="co">#&gt; 3 84    95</span></span>
-<span id="cb3-7"><a></a><span class="co">#&gt; 4 68    60</span></span>
-<span id="cb3-8"><a></a><span class="co">#&gt; 5 77    70</span></span>
-<span id="cb3-9"><a></a><span class="co">#&gt; 6 93    35</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="co"># One row per diagnostic mammogram event</span></span>
+<span id="cb3-2"><a aria-label="2"></a><span class="fu">head</span>(diagnostic_mammograms)</span>
+<span id="cb3-3"><a aria-label="3"></a><span class="co">#&gt;   id month</span></span>
+<span id="cb3-4"><a aria-label="4"></a><span class="co">#&gt; 1 98    46</span></span>
+<span id="cb3-5"><a aria-label="5"></a><span class="co">#&gt; 2  4    55</span></span>
+<span id="cb3-6"><a aria-label="6"></a><span class="co">#&gt; 3 84    95</span></span>
+<span id="cb3-7"><a aria-label="7"></a><span class="co">#&gt; 4 68    60</span></span>
+<span id="cb3-8"><a aria-label="8"></a><span class="co">#&gt; 5 77    70</span></span>
+<span id="cb3-9"><a aria-label="9"></a><span class="co">#&gt; 6 93    35</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Months are numbered consecutively from 1 (January 2000) to 108 (December 2008). Participants enter the study between months 1 and 60.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">hist</span>(</span>
-<span id="cb4-2"><a></a>  cohort<span class="sc">$</span>start_month,</span>
-<span id="cb4-3"><a></a>  <span class="at">breaks =</span> <span class="dv">20</span>,</span>
-<span id="cb4-4"><a></a>  <span class="at">main =</span> <span class="st">"Study Entry Month"</span>,</span>
-<span id="cb4-5"><a></a>  <span class="at">xlab =</span> <span class="st">"Month (1 = January 2000)"</span>,</span>
-<span id="cb4-6"><a></a>  <span class="at">col =</span> <span class="st">"steelblue"</span>,</span>
-<span id="cb4-7"><a></a>  <span class="at">border =</span> <span class="st">"white"</span></span>
-<span id="cb4-8"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a><span class="fu">hist</span>(</span>
+<span id="cb4-2"><a aria-label="2"></a>  cohort<span class="sc">$</span>start_month,</span>
+<span id="cb4-3"><a aria-label="3"></a>  <span class="at">breaks =</span> <span class="dv">20</span>,</span>
+<span id="cb4-4"><a aria-label="4"></a>  <span class="at">main =</span> <span class="st">"Study Entry Month"</span>,</span>
+<span id="cb4-5"><a aria-label="5"></a>  <span class="at">xlab =</span> <span class="st">"Month (1 = January 2000)"</span>,</span>
+<span id="cb4-6"><a aria-label="6"></a>  <span class="at">col =</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb4-7"><a aria-label="7"></a>  <span class="at">border =</span> <span class="st">"white"</span></span>
+<span id="cb4-8"><a aria-label="8"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
@@ -319,23 +322,23 @@ Figure&nbsp;1: Distribution of study entry months in the simulated cohort.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>cloned <span class="ot">&lt;-</span> <span class="fu">clone_censor</span>(</span>
-<span id="cb5-2"><a></a>  cohort,</span>
-<span id="cb5-3"><a></a>  screening_mammograms,</span>
-<span id="cb5-4"><a></a>  diagnostic_mammograms</span>
-<span id="cb5-5"><a></a>)</span>
-<span id="cb5-6"><a></a></span>
-<span id="cb5-7"><a></a><span class="fu">nrow</span>(cloned) <span class="co"># should be 2 × nrow(cohort)</span></span>
-<span id="cb5-8"><a></a><span class="co">#&gt; [1] 200</span></span>
-<span id="cb5-9"><a></a><span class="fu">head</span>(cloned[, <span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"arm"</span>, <span class="st">"start_month"</span>, <span class="st">"end_month"</span>,</span>
-<span id="cb5-10"><a></a>                <span class="st">"censor_month"</span>, <span class="st">"fup"</span>, <span class="st">"died"</span>, <span class="st">"bc_died"</span>)])</span>
-<span id="cb5-11"><a></a><span class="co">#&gt;   id      arm start_month end_month censor_month fup died bc_died</span></span>
-<span id="cb5-12"><a></a><span class="co">#&gt; 1  1 STOPBASE          26        38           38  13    0       0</span></span>
-<span id="cb5-13"><a></a><span class="co">#&gt; 2  2 STOPBASE          33        45           45  13    0       0</span></span>
-<span id="cb5-14"><a></a><span class="co">#&gt; 3  3 STOPBASE          28        42           42  15    0       0</span></span>
-<span id="cb5-15"><a></a><span class="co">#&gt; 4  4 STOPBASE           1        12           12  12    0       0</span></span>
-<span id="cb5-16"><a></a><span class="co">#&gt; 5  5 STOPBASE          17        28           28  12    0       0</span></span>
-<span id="cb5-17"><a></a><span class="co">#&gt; 6  6 STOPBASE          40        52           52  13    0       0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a>cloned <span class="ot">&lt;-</span> <span class="fu">clone_censor</span>(</span>
+<span id="cb5-2"><a aria-label="2"></a>  cohort,</span>
+<span id="cb5-3"><a aria-label="3"></a>  screening_mammograms,</span>
+<span id="cb5-4"><a aria-label="4"></a>  diagnostic_mammograms</span>
+<span id="cb5-5"><a aria-label="5"></a>)</span>
+<span id="cb5-6"><a aria-label="6"></a></span>
+<span id="cb5-7"><a aria-label="7"></a><span class="fu">nrow</span>(cloned) <span class="co"># should be 2 × nrow(cohort)</span></span>
+<span id="cb5-8"><a aria-label="8"></a><span class="co">#&gt; [1] 200</span></span>
+<span id="cb5-9"><a aria-label="9"></a><span class="fu">head</span>(cloned[, <span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"arm"</span>, <span class="st">"start_month"</span>, <span class="st">"end_month"</span>,</span>
+<span id="cb5-10"><a aria-label="10"></a>                <span class="st">"censor_month"</span>, <span class="st">"fup"</span>, <span class="st">"died"</span>, <span class="st">"bc_died"</span>)])</span>
+<span id="cb5-11"><a aria-label="11"></a><span class="co">#&gt;   id      arm start_month end_month censor_month fup died bc_died</span></span>
+<span id="cb5-12"><a aria-label="12"></a><span class="co">#&gt; 1  1 STOPBASE          26        38           38  13    0       0</span></span>
+<span id="cb5-13"><a aria-label="13"></a><span class="co">#&gt; 2  2 STOPBASE          33        45           45  13    0       0</span></span>
+<span id="cb5-14"><a aria-label="14"></a><span class="co">#&gt; 3  3 STOPBASE          28        42           42  15    0       0</span></span>
+<span id="cb5-15"><a aria-label="15"></a><span class="co">#&gt; 4  4 STOPBASE           1        12           12  12    0       0</span></span>
+<span id="cb5-16"><a aria-label="16"></a><span class="co">#&gt; 5  5 STOPBASE          17        28           28  12    0       0</span></span>
+<span id="cb5-17"><a aria-label="17"></a><span class="co">#&gt; 6  6 STOPBASE          40        52           52  13    0       0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>The key new columns are:</p>
@@ -352,22 +355,22 @@ Figure&nbsp;1: Distribution of study entry months in the simulated cohort.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb6-2"><a></a></span>
-<span id="cb6-3"><a></a>stopbase <span class="ot">&lt;-</span> cloned[cloned<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">"STOPBASE"</span>, ]</span>
-<span id="cb6-4"><a></a>continue <span class="ot">&lt;-</span> cloned[cloned<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">"CONTINUE"</span>, ]</span>
-<span id="cb6-5"><a></a></span>
-<span id="cb6-6"><a></a><span class="fu">hist</span>(stopbase<span class="sc">$</span>fup,</span>
-<span id="cb6-7"><a></a>  <span class="at">breaks =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">"STOPBASE"</span>,</span>
-<span id="cb6-8"><a></a>  <span class="at">xlab =</span> <span class="st">"Follow-up (months)"</span>, <span class="at">col =</span> <span class="st">"#E05C4B"</span>, <span class="at">border =</span> <span class="st">"white"</span>,</span>
-<span id="cb6-9"><a></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">110</span>)</span>
-<span id="cb6-10"><a></a>)</span>
-<span id="cb6-11"><a></a><span class="fu">hist</span>(continue<span class="sc">$</span>fup,</span>
-<span id="cb6-12"><a></a>  <span class="at">breaks =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">"CONTINUE"</span>,</span>
-<span id="cb6-13"><a></a>  <span class="at">xlab =</span> <span class="st">"Follow-up (months)"</span>, <span class="at">col =</span> <span class="st">"#4B8FE0"</span>, <span class="at">border =</span> <span class="st">"white"</span>,</span>
-<span id="cb6-14"><a></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">110</span>)</span>
-<span id="cb6-15"><a></a>)</span>
-<span id="cb6-16"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-label="1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb6-2"><a aria-label="2"></a></span>
+<span id="cb6-3"><a aria-label="3"></a>stopbase <span class="ot">&lt;-</span> cloned[cloned<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">"STOPBASE"</span>, ]</span>
+<span id="cb6-4"><a aria-label="4"></a>continue <span class="ot">&lt;-</span> cloned[cloned<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">"CONTINUE"</span>, ]</span>
+<span id="cb6-5"><a aria-label="5"></a></span>
+<span id="cb6-6"><a aria-label="6"></a><span class="fu">hist</span>(stopbase<span class="sc">$</span>fup,</span>
+<span id="cb6-7"><a aria-label="7"></a>  <span class="at">breaks =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">"STOPBASE"</span>,</span>
+<span id="cb6-8"><a aria-label="8"></a>  <span class="at">xlab =</span> <span class="st">"Follow-up (months)"</span>, <span class="at">col =</span> <span class="st">"#E05C4B"</span>, <span class="at">border =</span> <span class="st">"white"</span>,</span>
+<span id="cb6-9"><a aria-label="9"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">110</span>)</span>
+<span id="cb6-10"><a aria-label="10"></a>)</span>
+<span id="cb6-11"><a aria-label="11"></a><span class="fu">hist</span>(continue<span class="sc">$</span>fup,</span>
+<span id="cb6-12"><a aria-label="12"></a>  <span class="at">breaks =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">"CONTINUE"</span>,</span>
+<span id="cb6-13"><a aria-label="13"></a>  <span class="at">xlab =</span> <span class="st">"Follow-up (months)"</span>, <span class="at">col =</span> <span class="st">"#4B8FE0"</span>, <span class="at">border =</span> <span class="st">"white"</span>,</span>
+<span id="cb6-14"><a aria-label="14"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">110</span>)</span>
+<span id="cb6-15"><a aria-label="15"></a>)</span>
+<span id="cb6-16"><a aria-label="16"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
@@ -376,15 +379,15 @@ Figure&nbsp;2: Follow-up time by arm and censoring type.
 </p><div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="co"># Percentage censored for protocol non-adherence in each arm</span></span>
-<span id="cb7-2"><a></a>prop_censored <span class="ot">&lt;-</span> <span class="fu">tapply</span>(</span>
-<span id="cb7-3"><a></a>  <span class="sc">!</span><span class="fu">is.na</span>(cloned<span class="sc">$</span>censor_month),</span>
-<span id="cb7-4"><a></a>  cloned<span class="sc">$</span>arm,</span>
-<span id="cb7-5"><a></a>  mean</span>
-<span id="cb7-6"><a></a>)</span>
-<span id="cb7-7"><a></a><span class="fu">round</span>(prop_censored <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
-<span id="cb7-8"><a></a><span class="co">#&gt; CONTINUE STOPBASE </span></span>
-<span id="cb7-9"><a></a><span class="co">#&gt;       34       90</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-label="1"></a><span class="co"># Percentage censored for protocol non-adherence in each arm</span></span>
+<span id="cb7-2"><a aria-label="2"></a>prop_censored <span class="ot">&lt;-</span> <span class="fu">tapply</span>(</span>
+<span id="cb7-3"><a aria-label="3"></a>  <span class="sc">!</span><span class="fu">is.na</span>(cloned<span class="sc">$</span>censor_month),</span>
+<span id="cb7-4"><a aria-label="4"></a>  cloned<span class="sc">$</span>arm,</span>
+<span id="cb7-5"><a aria-label="5"></a>  mean</span>
+<span id="cb7-6"><a aria-label="6"></a>)</span>
+<span id="cb7-7"><a aria-label="7"></a><span class="fu">round</span>(prop_censored <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb7-8"><a aria-label="8"></a><span class="co">#&gt; CONTINUE STOPBASE </span></span>
+<span id="cb7-9"><a aria-label="9"></a><span class="co">#&gt;       34       90</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>As expected, most STOPBASE clones are censored (those who continued getting annual mammograms), while only a minority of CONTINUE clones are censored (those who stopped getting mammograms).</p>
@@ -395,18 +398,18 @@ Figure&nbsp;2: Follow-up time by arm and censoring type.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>long_data <span class="ot">&lt;-</span> <span class="fu">expand_to_long</span>(cloned)</span>
-<span id="cb8-2"><a></a></span>
-<span id="cb8-3"><a></a><span class="fu">nrow</span>(long_data) <span class="co"># total person-arm-months</span></span>
-<span id="cb8-4"><a></a><span class="co">#&gt; [1] 7052</span></span>
-<span id="cb8-5"><a></a><span class="fu">head</span>(long_data)</span>
-<span id="cb8-6"><a></a><span class="co">#&gt;   id      arm month month2 dead_t1 bc_dead_t1 bc_long</span></span>
-<span id="cb8-7"><a></a><span class="co">#&gt; 1  1 STOPBASE    26      0       0          0       0</span></span>
-<span id="cb8-8"><a></a><span class="co">#&gt; 2  1 STOPBASE    27      1       0          0       0</span></span>
-<span id="cb8-9"><a></a><span class="co">#&gt; 3  1 STOPBASE    28      2       0          0       0</span></span>
-<span id="cb8-10"><a></a><span class="co">#&gt; 4  1 STOPBASE    29      3       0          0       0</span></span>
-<span id="cb8-11"><a></a><span class="co">#&gt; 5  1 STOPBASE    30      4       0          0       0</span></span>
-<span id="cb8-12"><a></a><span class="co">#&gt; 6  1 STOPBASE    31      5       0          0       0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-label="1"></a>long_data <span class="ot">&lt;-</span> <span class="fu">expand_to_long</span>(cloned)</span>
+<span id="cb8-2"><a aria-label="2"></a></span>
+<span id="cb8-3"><a aria-label="3"></a><span class="fu">nrow</span>(long_data) <span class="co"># total person-arm-months</span></span>
+<span id="cb8-4"><a aria-label="4"></a><span class="co">#&gt; [1] 7052</span></span>
+<span id="cb8-5"><a aria-label="5"></a><span class="fu">head</span>(long_data)</span>
+<span id="cb8-6"><a aria-label="6"></a><span class="co">#&gt;   id      arm month month2 dead_t1 bc_dead_t1 bc_long</span></span>
+<span id="cb8-7"><a aria-label="7"></a><span class="co">#&gt; 1  1 STOPBASE    26      0       0          0       0</span></span>
+<span id="cb8-8"><a aria-label="8"></a><span class="co">#&gt; 2  1 STOPBASE    27      1       0          0       0</span></span>
+<span id="cb8-9"><a aria-label="9"></a><span class="co">#&gt; 3  1 STOPBASE    28      2       0          0       0</span></span>
+<span id="cb8-10"><a aria-label="10"></a><span class="co">#&gt; 4  1 STOPBASE    29      3       0          0       0</span></span>
+<span id="cb8-11"><a aria-label="11"></a><span class="co">#&gt; 5  1 STOPBASE    30      4       0          0       0</span></span>
+<span id="cb8-12"><a aria-label="12"></a><span class="co">#&gt; 6  1 STOPBASE    31      5       0          0       0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>The key columns in the long dataset are:</p>
@@ -420,11 +423,11 @@ Figure&nbsp;2: Follow-up time by arm and censoring type.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="co"># Total events in the long dataset</span></span>
-<span id="cb9-2"><a></a><span class="fu">table</span>(long_data<span class="sc">$</span>dead_t1, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span>
-<span id="cb9-3"><a></a><span class="co">#&gt; </span></span>
-<span id="cb9-4"><a></a><span class="co">#&gt;    0    1 &lt;NA&gt; </span></span>
-<span id="cb9-5"><a></a><span class="co">#&gt; 6852   19  181</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-label="1"></a><span class="co"># Total events in the long dataset</span></span>
+<span id="cb9-2"><a aria-label="2"></a><span class="fu">table</span>(long_data<span class="sc">$</span>dead_t1, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span>
+<span id="cb9-3"><a aria-label="3"></a><span class="co">#&gt; </span></span>
+<span id="cb9-4"><a aria-label="4"></a><span class="co">#&gt;    0    1 &lt;NA&gt; </span></span>
+<span id="cb9-5"><a aria-label="5"></a><span class="co">#&gt; 6852   19  181</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <h3 id="verifying-the-long-format">Verifying the Long Format</h3>
@@ -432,13 +435,13 @@ Figure&nbsp;2: Follow-up time by arm and censoring type.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="co"># Deaths in cloned dataset</span></span>
-<span id="cb10-2"><a></a><span class="fu">sum</span>(cloned<span class="sc">$</span>died)</span>
-<span id="cb10-3"><a></a><span class="co">#&gt; [1] 19</span></span>
-<span id="cb10-4"><a></a></span>
-<span id="cb10-5"><a></a><span class="co"># Rows with dead_t1 = 1 in long dataset</span></span>
-<span id="cb10-6"><a></a><span class="fu">sum</span>(long_data<span class="sc">$</span>dead_t1 <span class="sc">==</span> <span class="dv">1</span>L, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb10-7"><a></a><span class="co">#&gt; [1] 19</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-label="1"></a><span class="co"># Deaths in cloned dataset</span></span>
+<span id="cb10-2"><a aria-label="2"></a><span class="fu">sum</span>(cloned<span class="sc">$</span>died)</span>
+<span id="cb10-3"><a aria-label="3"></a><span class="co">#&gt; [1] 19</span></span>
+<span id="cb10-4"><a aria-label="4"></a></span>
+<span id="cb10-5"><a aria-label="5"></a><span class="co"># Rows with dead_t1 = 1 in long dataset</span></span>
+<span id="cb10-6"><a aria-label="6"></a><span class="fu">sum</span>(long_data<span class="sc">$</span>dead_t1 <span class="sc">==</span> <span class="dv">1</span>L, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-7"><a aria-label="7"></a><span class="co">#&gt; [1] 19</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -449,49 +452,49 @@ Figure&nbsp;2: Follow-up time by arm and censoring type.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>crude_cumulative_mortality <span class="ot">&lt;-</span> <span class="cf">function</span>(arm_long) {</span>
-<span id="cb11-2"><a></a>  months <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="fu">max</span>(arm_long<span class="sc">$</span>month2)</span>
-<span id="cb11-3"><a></a></span>
-<span id="cb11-4"><a></a>  deaths <span class="ot">&lt;-</span> <span class="fu">vapply</span>(</span>
-<span id="cb11-5"><a></a>    months,</span>
-<span id="cb11-6"><a></a>    <span class="cf">function</span>(t) <span class="fu">sum</span>(arm_long<span class="sc">$</span>dead_t1[arm_long<span class="sc">$</span>month2 <span class="sc">==</span> t] <span class="sc">==</span> <span class="dv">1</span>L, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb11-7"><a></a>    <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
-<span id="cb11-8"><a></a>  )</span>
-<span id="cb11-9"><a></a>  n_risk <span class="ot">&lt;-</span> <span class="fu">vapply</span>(</span>
-<span id="cb11-10"><a></a>    months,</span>
-<span id="cb11-11"><a></a>    <span class="cf">function</span>(t) <span class="fu">sum</span>(arm_long<span class="sc">$</span>month2 <span class="sc">==</span> t),</span>
-<span id="cb11-12"><a></a>    <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
-<span id="cb11-13"><a></a>  )</span>
-<span id="cb11-14"><a></a></span>
-<span id="cb11-15"><a></a>  <span class="fu">data.frame</span>(</span>
-<span id="cb11-16"><a></a>    <span class="at">month2 =</span> months,</span>
-<span id="cb11-17"><a></a>    <span class="at">cum_mort =</span> <span class="fu">cumsum</span>(deaths) <span class="sc">/</span> <span class="fu">max</span>(n_risk, <span class="dv">1</span>L)</span>
-<span id="cb11-18"><a></a>  )</span>
-<span id="cb11-19"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-label="1"></a>crude_cumulative_mortality <span class="ot">&lt;-</span> <span class="cf">function</span>(arm_long) {</span>
+<span id="cb11-2"><a aria-label="2"></a>  months <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="fu">max</span>(arm_long<span class="sc">$</span>month2)</span>
+<span id="cb11-3"><a aria-label="3"></a></span>
+<span id="cb11-4"><a aria-label="4"></a>  deaths <span class="ot">&lt;-</span> <span class="fu">vapply</span>(</span>
+<span id="cb11-5"><a aria-label="5"></a>    months,</span>
+<span id="cb11-6"><a aria-label="6"></a>    <span class="cf">function</span>(t) <span class="fu">sum</span>(arm_long<span class="sc">$</span>dead_t1[arm_long<span class="sc">$</span>month2 <span class="sc">==</span> t] <span class="sc">==</span> <span class="dv">1</span>L, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb11-7"><a aria-label="7"></a>    <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
+<span id="cb11-8"><a aria-label="8"></a>  )</span>
+<span id="cb11-9"><a aria-label="9"></a>  n_risk <span class="ot">&lt;-</span> <span class="fu">vapply</span>(</span>
+<span id="cb11-10"><a aria-label="10"></a>    months,</span>
+<span id="cb11-11"><a aria-label="11"></a>    <span class="cf">function</span>(t) <span class="fu">sum</span>(arm_long<span class="sc">$</span>month2 <span class="sc">==</span> t),</span>
+<span id="cb11-12"><a aria-label="12"></a>    <span class="fu">numeric</span>(<span class="dv">1</span>)</span>
+<span id="cb11-13"><a aria-label="13"></a>  )</span>
+<span id="cb11-14"><a aria-label="14"></a></span>
+<span id="cb11-15"><a aria-label="15"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb11-16"><a aria-label="16"></a>    <span class="at">month2 =</span> months,</span>
+<span id="cb11-17"><a aria-label="17"></a>    <span class="at">cum_mort =</span> <span class="fu">cumsum</span>(deaths) <span class="sc">/</span> <span class="fu">max</span>(n_risk, <span class="dv">1</span>L)</span>
+<span id="cb11-18"><a aria-label="18"></a>  )</span>
+<span id="cb11-19"><a aria-label="19"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>With the computation factored out, plotting the two arms is a short loop over the helper.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>arms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"STOPBASE"</span>, <span class="st">"CONTINUE"</span>)</span>
-<span id="cb12-2"><a></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#E05C4B"</span>, <span class="st">"#4B8FE0"</span>)</span>
-<span id="cb12-3"><a></a></span>
-<span id="cb12-4"><a></a><span class="fu">plot</span>(<span class="cn">NA</span>,</span>
-<span id="cb12-5"><a></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">70</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.15</span>),</span>
-<span id="cb12-6"><a></a>  <span class="at">xlab =</span> <span class="st">"Months since study entry"</span>,</span>
-<span id="cb12-7"><a></a>  <span class="at">ylab =</span> <span class="st">"Cumulative mortality (crude)"</span>,</span>
-<span id="cb12-8"><a></a>  <span class="at">main =</span> <span class="st">"Crude cumulative mortality by arm"</span></span>
-<span id="cb12-9"><a></a>)</span>
-<span id="cb12-10"><a></a></span>
-<span id="cb12-11"><a></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(arms)) {</span>
-<span id="cb12-12"><a></a>  curve <span class="ot">&lt;-</span> <span class="fu">crude_cumulative_mortality</span>(long_data[long_data<span class="sc">$</span>arm <span class="sc">==</span> arms[j], ])</span>
-<span id="cb12-13"><a></a>  <span class="fu">lines</span>(curve<span class="sc">$</span>month2, curve<span class="sc">$</span>cum_mort, <span class="at">col =</span> cols[j], <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb12-14"><a></a>}</span>
-<span id="cb12-15"><a></a></span>
-<span id="cb12-16"><a></a><span class="fu">legend</span>(<span class="st">"topleft"</span>,</span>
-<span id="cb12-17"><a></a>  <span class="at">legend =</span> arms, <span class="at">col =</span> cols, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span></span>
-<span id="cb12-18"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-label="1"></a>arms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"STOPBASE"</span>, <span class="st">"CONTINUE"</span>)</span>
+<span id="cb12-2"><a aria-label="2"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#E05C4B"</span>, <span class="st">"#4B8FE0"</span>)</span>
+<span id="cb12-3"><a aria-label="3"></a></span>
+<span id="cb12-4"><a aria-label="4"></a><span class="fu">plot</span>(<span class="cn">NA</span>,</span>
+<span id="cb12-5"><a aria-label="5"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">70</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.15</span>),</span>
+<span id="cb12-6"><a aria-label="6"></a>  <span class="at">xlab =</span> <span class="st">"Months since study entry"</span>,</span>
+<span id="cb12-7"><a aria-label="7"></a>  <span class="at">ylab =</span> <span class="st">"Cumulative mortality (crude)"</span>,</span>
+<span id="cb12-8"><a aria-label="8"></a>  <span class="at">main =</span> <span class="st">"Crude cumulative mortality by arm"</span></span>
+<span id="cb12-9"><a aria-label="9"></a>)</span>
+<span id="cb12-10"><a aria-label="10"></a></span>
+<span id="cb12-11"><a aria-label="11"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(arms)) {</span>
+<span id="cb12-12"><a aria-label="12"></a>  curve <span class="ot">&lt;-</span> <span class="fu">crude_cumulative_mortality</span>(long_data[long_data<span class="sc">$</span>arm <span class="sc">==</span> arms[j], ])</span>
+<span id="cb12-13"><a aria-label="13"></a>  <span class="fu">lines</span>(curve<span class="sc">$</span>month2, curve<span class="sc">$</span>cum_mort, <span class="at">col =</span> cols[j], <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb12-14"><a aria-label="14"></a>}</span>
+<span id="cb12-15"><a aria-label="15"></a></span>
+<span id="cb12-16"><a aria-label="16"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>,</span>
+<span id="cb12-17"><a aria-label="17"></a>  <span class="at">legend =</span> arms, <span class="at">col =</span> cols, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span></span>
+<span id="cb12-18"><a aria-label="18"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
@@ -518,18 +521,18 @@ Figure&nbsp;3: Empirical cumulative mortality by arm (crude, without IPW). Under
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>sim <span class="ot">&lt;-</span> <span class="fu">simulate_screening_cohort</span>(<span class="at">n =</span> <span class="dv">1000</span>, <span class="at">max_month =</span> <span class="dv">108</span>, <span class="at">seed =</span> <span class="dv">7</span>)</span>
-<span id="cb13-2"><a></a></span>
-<span id="cb13-3"><a></a>cloned_l <span class="ot">&lt;-</span> <span class="fu">clone_censor</span>(</span>
-<span id="cb13-4"><a></a>  sim<span class="sc">$</span>cohort, sim<span class="sc">$</span>screening_mammograms, sim<span class="sc">$</span>diagnostic_mammograms</span>
-<span id="cb13-5"><a></a>)</span>
-<span id="cb13-6"><a></a>long_l <span class="ot">&lt;-</span> <span class="fu">expand_to_long</span>(cloned_l)</span>
-<span id="cb13-7"><a></a>long_l <span class="ot">&lt;-</span> <span class="fu">augment_long_covariates</span>(</span>
-<span id="cb13-8"><a></a>  long_l, sim<span class="sc">$</span>screening_mammograms, sim<span class="sc">$</span>diagnostic_mammograms</span>
-<span id="cb13-9"><a></a>)</span>
-<span id="cb13-10"><a></a></span>
-<span id="cb13-11"><a></a><span class="fu">nrow</span>(long_l) <span class="co"># person-arm-months</span></span>
-<span id="cb13-12"><a></a><span class="co">#&gt; [1] 73469</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-label="1"></a>sim <span class="ot">&lt;-</span> <span class="fu">simulate_screening_cohort</span>(<span class="at">n =</span> <span class="dv">1000</span>, <span class="at">max_month =</span> <span class="dv">108</span>, <span class="at">seed =</span> <span class="dv">7</span>)</span>
+<span id="cb13-2"><a aria-label="2"></a></span>
+<span id="cb13-3"><a aria-label="3"></a>cloned_l <span class="ot">&lt;-</span> <span class="fu">clone_censor</span>(</span>
+<span id="cb13-4"><a aria-label="4"></a>  sim<span class="sc">$</span>cohort, sim<span class="sc">$</span>screening_mammograms, sim<span class="sc">$</span>diagnostic_mammograms</span>
+<span id="cb13-5"><a aria-label="5"></a>)</span>
+<span id="cb13-6"><a aria-label="6"></a>long_l <span class="ot">&lt;-</span> <span class="fu">expand_to_long</span>(cloned_l)</span>
+<span id="cb13-7"><a aria-label="7"></a>long_l <span class="ot">&lt;-</span> <span class="fu">augment_long_covariates</span>(</span>
+<span id="cb13-8"><a aria-label="8"></a>  long_l, sim<span class="sc">$</span>screening_mammograms, sim<span class="sc">$</span>diagnostic_mammograms</span>
+<span id="cb13-9"><a aria-label="9"></a>)</span>
+<span id="cb13-10"><a aria-label="10"></a></span>
+<span id="cb13-11"><a aria-label="11"></a><span class="fu">nrow</span>(long_l) <span class="co"># person-arm-months</span></span>
+<span id="cb13-12"><a aria-label="12"></a><span class="co">#&gt; [1] 73469</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -539,14 +542,14 @@ Figure&nbsp;3: Empirical cumulative mortality by arm (crude, without IPW). Under
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>propensity <span class="ot">&lt;-</span> <span class="fu">fit_screening_propensity</span>(long_l)</span>
-<span id="cb14-2"><a></a>weighted <span class="ot">&lt;-</span> <span class="fu">compute_ipw_weights</span>(propensity<span class="sc">$</span>data, <span class="at">pred_prob_col =</span> <span class="st">"p_scrmammo"</span>)</span>
-<span id="cb14-3"><a></a></span>
-<span id="cb14-4"><a></a><span class="co"># Stabilized, truncated weights are centered near 1 in both arms</span></span>
-<span id="cb14-5"><a></a><span class="fu">round</span>(<span class="fu">t</span>(<span class="fu">sapply</span>(<span class="fu">split</span>(weighted<span class="sc">$</span>wp99, weighted<span class="sc">$</span>arm), summary)), <span class="dv">2</span>)</span>
-<span id="cb14-6"><a></a><span class="co">#&gt;          Min. 1st Qu. Median Mean 3rd Qu.  Max.</span></span>
-<span id="cb14-7"><a></a><span class="co">#&gt; CONTINUE    0       1   1.33 2.10    2.17 15.35</span></span>
-<span id="cb14-8"><a></a><span class="co">#&gt; STOPBASE    1       1   1.00 5.07   10.15 37.88</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-label="1"></a>propensity <span class="ot">&lt;-</span> <span class="fu">fit_screening_propensity</span>(long_l)</span>
+<span id="cb14-2"><a aria-label="2"></a>weighted <span class="ot">&lt;-</span> <span class="fu">compute_ipw_weights</span>(propensity<span class="sc">$</span>data, <span class="at">pred_prob_col =</span> <span class="st">"p_scrmammo"</span>)</span>
+<span id="cb14-3"><a aria-label="3"></a></span>
+<span id="cb14-4"><a aria-label="4"></a><span class="co"># Stabilized, truncated weights are centered near 1 in both arms</span></span>
+<span id="cb14-5"><a aria-label="5"></a><span class="fu">round</span>(<span class="fu">t</span>(<span class="fu">sapply</span>(<span class="fu">split</span>(weighted<span class="sc">$</span>wp99, weighted<span class="sc">$</span>arm), summary)), <span class="dv">2</span>)</span>
+<span id="cb14-6"><a aria-label="6"></a><span class="co">#&gt;          Min. 1st Qu. Median Mean 3rd Qu.  Max.</span></span>
+<span id="cb14-7"><a aria-label="7"></a><span class="co">#&gt; CONTINUE    0       1   1.33 2.10    2.17 15.35</span></span>
+<span id="cb14-8"><a aria-label="8"></a><span class="co">#&gt; STOPBASE    1       1   1.00 5.07   10.15 37.88</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -556,15 +559,15 @@ Figure&nbsp;3: Empirical cumulative mortality by arm (crude, without IPW). Under
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>hr <span class="ot">&lt;-</span> <span class="fu">fit_outcome_hr</span>(</span>
-<span id="cb15-2"><a></a>  weighted,</span>
-<span id="cb15-3"><a></a>  <span class="at">weight_col =</span> <span class="st">"wp99"</span>,</span>
-<span id="cb15-4"><a></a>  <span class="at">outcome_col =</span> <span class="st">"dead_t1"</span></span>
-<span id="cb15-5"><a></a>)</span>
-<span id="cb15-6"><a></a></span>
-<span id="cb15-7"><a></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">OR =</span> hr<span class="sc">$</span>or, hr<span class="sc">$</span>or_ci), <span class="dv">3</span>)</span>
-<span id="cb15-8"><a></a><span class="co">#&gt;     OR  2.5 % 97.5 % </span></span>
-<span id="cb15-9"><a></a><span class="co">#&gt;  0.976  0.669  1.422</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-label="1"></a>hr <span class="ot">&lt;-</span> <span class="fu">fit_outcome_hr</span>(</span>
+<span id="cb15-2"><a aria-label="2"></a>  weighted,</span>
+<span id="cb15-3"><a aria-label="3"></a>  <span class="at">weight_col =</span> <span class="st">"wp99"</span>,</span>
+<span id="cb15-4"><a aria-label="4"></a>  <span class="at">outcome_col =</span> <span class="st">"dead_t1"</span></span>
+<span id="cb15-5"><a aria-label="5"></a>)</span>
+<span id="cb15-6"><a aria-label="6"></a></span>
+<span id="cb15-7"><a aria-label="7"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">OR =</span> hr<span class="sc">$</span>or, hr<span class="sc">$</span>or_ci), <span class="dv">3</span>)</span>
+<span id="cb15-8"><a aria-label="8"></a><span class="co">#&gt;     OR  2.5 % 97.5 % </span></span>
+<span id="cb15-9"><a aria-label="9"></a><span class="co">#&gt;  0.976  0.669  1.422</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>As expected under a simulation with no built-in effect, the odds ratio sits near 1 and its confidence interval covers the null.</p>
@@ -575,24 +578,24 @@ Figure&nbsp;3: Empirical cumulative mortality by arm (crude, without IPW). Under
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>surv <span class="ot">&lt;-</span> <span class="fu">predict_survival_ipw</span>(</span>
-<span id="cb16-2"><a></a>  weighted,</span>
-<span id="cb16-3"><a></a>  <span class="at">weight_col =</span> <span class="st">"wp99"</span>,</span>
-<span id="cb16-4"><a></a>  <span class="at">outcome_col =</span> <span class="st">"dead_t1"</span></span>
-<span id="cb16-5"><a></a>)</span>
-<span id="cb16-6"><a></a></span>
-<span id="cb16-7"><a></a><span class="fu">plot</span>(<span class="cn">NA</span>,</span>
-<span id="cb16-8"><a></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">72</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="dv">1</span>),</span>
-<span id="cb16-9"><a></a>  <span class="at">xlab =</span> <span class="st">"Months since study entry"</span>,</span>
-<span id="cb16-10"><a></a>  <span class="at">ylab =</span> <span class="st">"Survival probability"</span>,</span>
-<span id="cb16-11"><a></a>  <span class="at">main =</span> <span class="st">"IP-weighted survival by arm"</span></span>
-<span id="cb16-12"><a></a>)</span>
-<span id="cb16-13"><a></a><span class="fu">lines</span>(surv<span class="sc">$</span>month, surv<span class="sc">$</span>s_continue, <span class="at">col =</span> <span class="st">"#4B8FE0"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb16-14"><a></a><span class="fu">lines</span>(surv<span class="sc">$</span>month, surv<span class="sc">$</span>s_stopbase, <span class="at">col =</span> <span class="st">"#E05C4B"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb16-15"><a></a><span class="fu">legend</span>(<span class="st">"bottomleft"</span>,</span>
-<span id="cb16-16"><a></a>  <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"CONTINUE"</span>, <span class="st">"STOPBASE"</span>),</span>
-<span id="cb16-17"><a></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4B8FE0"</span>, <span class="st">"#E05C4B"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span></span>
-<span id="cb16-18"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-label="1"></a>surv <span class="ot">&lt;-</span> <span class="fu">predict_survival_ipw</span>(</span>
+<span id="cb16-2"><a aria-label="2"></a>  weighted,</span>
+<span id="cb16-3"><a aria-label="3"></a>  <span class="at">weight_col =</span> <span class="st">"wp99"</span>,</span>
+<span id="cb16-4"><a aria-label="4"></a>  <span class="at">outcome_col =</span> <span class="st">"dead_t1"</span></span>
+<span id="cb16-5"><a aria-label="5"></a>)</span>
+<span id="cb16-6"><a aria-label="6"></a></span>
+<span id="cb16-7"><a aria-label="7"></a><span class="fu">plot</span>(<span class="cn">NA</span>,</span>
+<span id="cb16-8"><a aria-label="8"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">72</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="dv">1</span>),</span>
+<span id="cb16-9"><a aria-label="9"></a>  <span class="at">xlab =</span> <span class="st">"Months since study entry"</span>,</span>
+<span id="cb16-10"><a aria-label="10"></a>  <span class="at">ylab =</span> <span class="st">"Survival probability"</span>,</span>
+<span id="cb16-11"><a aria-label="11"></a>  <span class="at">main =</span> <span class="st">"IP-weighted survival by arm"</span></span>
+<span id="cb16-12"><a aria-label="12"></a>)</span>
+<span id="cb16-13"><a aria-label="13"></a><span class="fu">lines</span>(surv<span class="sc">$</span>month, surv<span class="sc">$</span>s_continue, <span class="at">col =</span> <span class="st">"#4B8FE0"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb16-14"><a aria-label="14"></a><span class="fu">lines</span>(surv<span class="sc">$</span>month, surv<span class="sc">$</span>s_stopbase, <span class="at">col =</span> <span class="st">"#E05C4B"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb16-15"><a aria-label="15"></a><span class="fu">legend</span>(<span class="st">"bottomleft"</span>,</span>
+<span id="cb16-16"><a aria-label="16"></a>  <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"CONTINUE"</span>, <span class="st">"STOPBASE"</span>),</span>
+<span id="cb16-17"><a aria-label="17"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#4B8FE0"</span>, <span class="st">"#E05C4B"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span></span>
+<span id="cb16-18"><a aria-label="18"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
@@ -605,28 +608,28 @@ Figure&nbsp;4: IP-weighted marginal survival by arm. The arms track each other c
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>boot <span class="ot">&lt;-</span> <span class="fu">bootstrap_ci</span>(</span>
-<span id="cb17-2"><a></a>  propensity<span class="sc">$</span>data,</span>
-<span id="cb17-3"><a></a>  <span class="at">pred_prob_col =</span> <span class="st">"p_scrmammo"</span>,</span>
-<span id="cb17-4"><a></a>  <span class="at">outcome_col =</span> <span class="st">"dead_t1"</span>,</span>
-<span id="cb17-5"><a></a>  <span class="at">max_month =</span> <span class="dv">72</span>,</span>
-<span id="cb17-6"><a></a>  <span class="at">n_boot =</span> <span class="dv">50</span>,</span>
-<span id="cb17-7"><a></a>  <span class="at">seed =</span> <span class="dv">1</span></span>
-<span id="cb17-8"><a></a>)</span>
-<span id="cb17-9"><a></a></span>
-<span id="cb17-10"><a></a><span class="fu">plot</span>(<span class="cn">NA</span>,</span>
-<span id="cb17-11"><a></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">72</span>), <span class="at">ylim =</span> <span class="fu">range</span>(<span class="fu">c</span>(boot<span class="sc">$</span>diff_lo, boot<span class="sc">$</span>diff_hi), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb17-12"><a></a>  <span class="at">xlab =</span> <span class="st">"Months since study entry"</span>,</span>
-<span id="cb17-13"><a></a>  <span class="at">ylab =</span> <span class="st">"Survival difference (CONTINUE - STOPBASE)"</span>,</span>
-<span id="cb17-14"><a></a>  <span class="at">main =</span> <span class="st">"Bootstrap survival difference with 95% CI"</span></span>
-<span id="cb17-15"><a></a>)</span>
-<span id="cb17-16"><a></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"grey60"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb17-17"><a></a><span class="fu">polygon</span>(</span>
-<span id="cb17-18"><a></a>  <span class="fu">c</span>(boot<span class="sc">$</span>month, <span class="fu">rev</span>(boot<span class="sc">$</span>month)),</span>
-<span id="cb17-19"><a></a>  <span class="fu">c</span>(boot<span class="sc">$</span>diff_lo, <span class="fu">rev</span>(boot<span class="sc">$</span>diff_hi)),</span>
-<span id="cb17-20"><a></a>  <span class="at">col =</span> <span class="st">"#4B8FE022"</span>, <span class="at">border =</span> <span class="cn">NA</span></span>
-<span id="cb17-21"><a></a>)</span>
-<span id="cb17-22"><a></a><span class="fu">lines</span>(boot<span class="sc">$</span>month, boot<span class="sc">$</span>diff, <span class="at">col =</span> <span class="st">"#222222"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-label="1"></a>boot <span class="ot">&lt;-</span> <span class="fu">bootstrap_ci</span>(</span>
+<span id="cb17-2"><a aria-label="2"></a>  propensity<span class="sc">$</span>data,</span>
+<span id="cb17-3"><a aria-label="3"></a>  <span class="at">pred_prob_col =</span> <span class="st">"p_scrmammo"</span>,</span>
+<span id="cb17-4"><a aria-label="4"></a>  <span class="at">outcome_col =</span> <span class="st">"dead_t1"</span>,</span>
+<span id="cb17-5"><a aria-label="5"></a>  <span class="at">max_month =</span> <span class="dv">72</span>,</span>
+<span id="cb17-6"><a aria-label="6"></a>  <span class="at">n_boot =</span> <span class="dv">50</span>,</span>
+<span id="cb17-7"><a aria-label="7"></a>  <span class="at">seed =</span> <span class="dv">1</span></span>
+<span id="cb17-8"><a aria-label="8"></a>)</span>
+<span id="cb17-9"><a aria-label="9"></a></span>
+<span id="cb17-10"><a aria-label="10"></a><span class="fu">plot</span>(<span class="cn">NA</span>,</span>
+<span id="cb17-11"><a aria-label="11"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">72</span>), <span class="at">ylim =</span> <span class="fu">range</span>(<span class="fu">c</span>(boot<span class="sc">$</span>diff_lo, boot<span class="sc">$</span>diff_hi), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-12"><a aria-label="12"></a>  <span class="at">xlab =</span> <span class="st">"Months since study entry"</span>,</span>
+<span id="cb17-13"><a aria-label="13"></a>  <span class="at">ylab =</span> <span class="st">"Survival difference (CONTINUE - STOPBASE)"</span>,</span>
+<span id="cb17-14"><a aria-label="14"></a>  <span class="at">main =</span> <span class="st">"Bootstrap survival difference with 95% CI"</span></span>
+<span id="cb17-15"><a aria-label="15"></a>)</span>
+<span id="cb17-16"><a aria-label="16"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"grey60"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb17-17"><a aria-label="17"></a><span class="fu">polygon</span>(</span>
+<span id="cb17-18"><a aria-label="18"></a>  <span class="fu">c</span>(boot<span class="sc">$</span>month, <span class="fu">rev</span>(boot<span class="sc">$</span>month)),</span>
+<span id="cb17-19"><a aria-label="19"></a>  <span class="fu">c</span>(boot<span class="sc">$</span>diff_lo, <span class="fu">rev</span>(boot<span class="sc">$</span>diff_hi)),</span>
+<span id="cb17-20"><a aria-label="20"></a>  <span class="at">col =</span> <span class="st">"#4B8FE022"</span>, <span class="at">border =</span> <span class="cn">NA</span></span>
+<span id="cb17-21"><a aria-label="21"></a>)</span>
+<span id="cb17-22"><a aria-label="22"></a><span class="fu">lines</span>(boot<span class="sc">$</span>month, boot<span class="sc">$</span>diff, <span class="at">col =</span> <span class="st">"#222222"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
@@ -1123,7 +1126,7 @@ window.addEventListener("load", alignEquationAnchorsWithDefault);
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

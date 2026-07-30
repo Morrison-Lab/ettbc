@@ -6,10 +6,10 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/quarto-contrib/div-anchors-1.0.0/div-anchors.js"></script>
 <link href="../site_libs/quarto-contrib/div-anchors-1.0.0/div-anchors.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.38">
+  <meta name="generator" content="quarto-1.10.18">
 
   <title>ettbc – Getting Started</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,10 +21,13 @@
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
-    code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -209,7 +212,7 @@
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(ettbc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a><span class="fu">library</span>(ettbc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -223,15 +226,15 @@
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># One row per participant</span></span>
-<span id="cb2-2"><a></a><span class="fu">head</span>(cohort)</span>
-<span id="cb2-3"><a></a><span class="co">#&gt;   id age start_month end_month death_month bc_death bc_month</span></span>
-<span id="cb2-4"><a></a><span class="co">#&gt; 1  1  81          26       108          NA        0       NA</span></span>
-<span id="cb2-5"><a></a><span class="co">#&gt; 2  2  81          33       108          NA        0       NA</span></span>
-<span id="cb2-6"><a></a><span class="co">#&gt; 3  3  76          28       108          NA        0       NA</span></span>
-<span id="cb2-7"><a></a><span class="co">#&gt; 4  4  75           1       108          NA        0       NA</span></span>
-<span id="cb2-8"><a></a><span class="co">#&gt; 5  5  77          17       108          NA        0       NA</span></span>
-<span id="cb2-9"><a></a><span class="co">#&gt; 6  6  70          40       108          NA        0       NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="co"># One row per participant</span></span>
+<span id="cb2-2"><a aria-label="2"></a><span class="fu">head</span>(cohort)</span>
+<span id="cb2-3"><a aria-label="3"></a><span class="co">#&gt;   id age start_month end_month death_month bc_death bc_month</span></span>
+<span id="cb2-4"><a aria-label="4"></a><span class="co">#&gt; 1  1  81          26       108          NA        0       NA</span></span>
+<span id="cb2-5"><a aria-label="5"></a><span class="co">#&gt; 2  2  81          33       108          NA        0       NA</span></span>
+<span id="cb2-6"><a aria-label="6"></a><span class="co">#&gt; 3  3  76          28       108          NA        0       NA</span></span>
+<span id="cb2-7"><a aria-label="7"></a><span class="co">#&gt; 4  4  75           1       108          NA        0       NA</span></span>
+<span id="cb2-8"><a aria-label="8"></a><span class="co">#&gt; 5  5  77          17       108          NA        0       NA</span></span>
+<span id="cb2-9"><a aria-label="9"></a><span class="co">#&gt; 6  6  70          40       108          NA        0       NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -241,22 +244,22 @@
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>cloned <span class="ot">&lt;-</span> <span class="fu">clone_censor</span>(</span>
-<span id="cb3-2"><a></a>  cohort,</span>
-<span id="cb3-3"><a></a>  screening_mammograms,</span>
-<span id="cb3-4"><a></a>  diagnostic_mammograms</span>
-<span id="cb3-5"><a></a>)</span>
-<span id="cb3-6"><a></a></span>
-<span id="cb3-7"><a></a><span class="fu">nrow</span>(cloned) <span class="co"># two rows per participant</span></span>
-<span id="cb3-8"><a></a><span class="co">#&gt; [1] 200</span></span>
-<span id="cb3-9"><a></a><span class="fu">head</span>(cloned[, <span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"arm"</span>, <span class="st">"start_month"</span>, <span class="st">"end_month"</span>, <span class="st">"fup"</span>, <span class="st">"bc_died"</span>)])</span>
-<span id="cb3-10"><a></a><span class="co">#&gt;   id      arm start_month end_month fup bc_died</span></span>
-<span id="cb3-11"><a></a><span class="co">#&gt; 1  1 STOPBASE          26        38  13       0</span></span>
-<span id="cb3-12"><a></a><span class="co">#&gt; 2  2 STOPBASE          33        45  13       0</span></span>
-<span id="cb3-13"><a></a><span class="co">#&gt; 3  3 STOPBASE          28        42  15       0</span></span>
-<span id="cb3-14"><a></a><span class="co">#&gt; 4  4 STOPBASE           1        12  12       0</span></span>
-<span id="cb3-15"><a></a><span class="co">#&gt; 5  5 STOPBASE          17        28  12       0</span></span>
-<span id="cb3-16"><a></a><span class="co">#&gt; 6  6 STOPBASE          40        52  13       0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a>cloned <span class="ot">&lt;-</span> <span class="fu">clone_censor</span>(</span>
+<span id="cb3-2"><a aria-label="2"></a>  cohort,</span>
+<span id="cb3-3"><a aria-label="3"></a>  screening_mammograms,</span>
+<span id="cb3-4"><a aria-label="4"></a>  diagnostic_mammograms</span>
+<span id="cb3-5"><a aria-label="5"></a>)</span>
+<span id="cb3-6"><a aria-label="6"></a></span>
+<span id="cb3-7"><a aria-label="7"></a><span class="fu">nrow</span>(cloned) <span class="co"># two rows per participant</span></span>
+<span id="cb3-8"><a aria-label="8"></a><span class="co">#&gt; [1] 200</span></span>
+<span id="cb3-9"><a aria-label="9"></a><span class="fu">head</span>(cloned[, <span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"arm"</span>, <span class="st">"start_month"</span>, <span class="st">"end_month"</span>, <span class="st">"fup"</span>, <span class="st">"bc_died"</span>)])</span>
+<span id="cb3-10"><a aria-label="10"></a><span class="co">#&gt;   id      arm start_month end_month fup bc_died</span></span>
+<span id="cb3-11"><a aria-label="11"></a><span class="co">#&gt; 1  1 STOPBASE          26        38  13       0</span></span>
+<span id="cb3-12"><a aria-label="12"></a><span class="co">#&gt; 2  2 STOPBASE          33        45  13       0</span></span>
+<span id="cb3-13"><a aria-label="13"></a><span class="co">#&gt; 3  3 STOPBASE          28        42  15       0</span></span>
+<span id="cb3-14"><a aria-label="14"></a><span class="co">#&gt; 4  4 STOPBASE           1        12  12       0</span></span>
+<span id="cb3-15"><a aria-label="15"></a><span class="co">#&gt; 5  5 STOPBASE          17        28  12       0</span></span>
+<span id="cb3-16"><a aria-label="16"></a><span class="co">#&gt; 6  6 STOPBASE          40        52  13       0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -266,15 +269,15 @@
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>long <span class="ot">&lt;-</span> <span class="fu">expand_to_long</span>(cloned)</span>
-<span id="cb4-2"><a></a><span class="fu">head</span>(long[, <span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"arm"</span>, <span class="st">"month"</span>, <span class="st">"month2"</span>, <span class="st">"dead_t1"</span>)])</span>
-<span id="cb4-3"><a></a><span class="co">#&gt;   id      arm month month2 dead_t1</span></span>
-<span id="cb4-4"><a></a><span class="co">#&gt; 1  1 STOPBASE    26      0       0</span></span>
-<span id="cb4-5"><a></a><span class="co">#&gt; 2  1 STOPBASE    27      1       0</span></span>
-<span id="cb4-6"><a></a><span class="co">#&gt; 3  1 STOPBASE    28      2       0</span></span>
-<span id="cb4-7"><a></a><span class="co">#&gt; 4  1 STOPBASE    29      3       0</span></span>
-<span id="cb4-8"><a></a><span class="co">#&gt; 5  1 STOPBASE    30      4       0</span></span>
-<span id="cb4-9"><a></a><span class="co">#&gt; 6  1 STOPBASE    31      5       0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a>long <span class="ot">&lt;-</span> <span class="fu">expand_to_long</span>(cloned)</span>
+<span id="cb4-2"><a aria-label="2"></a><span class="fu">head</span>(long[, <span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"arm"</span>, <span class="st">"month"</span>, <span class="st">"month2"</span>, <span class="st">"dead_t1"</span>)])</span>
+<span id="cb4-3"><a aria-label="3"></a><span class="co">#&gt;   id      arm month month2 dead_t1</span></span>
+<span id="cb4-4"><a aria-label="4"></a><span class="co">#&gt; 1  1 STOPBASE    26      0       0</span></span>
+<span id="cb4-5"><a aria-label="5"></a><span class="co">#&gt; 2  1 STOPBASE    27      1       0</span></span>
+<span id="cb4-6"><a aria-label="6"></a><span class="co">#&gt; 3  1 STOPBASE    28      2       0</span></span>
+<span id="cb4-7"><a aria-label="7"></a><span class="co">#&gt; 4  1 STOPBASE    29      3       0</span></span>
+<span id="cb4-8"><a aria-label="8"></a><span class="co">#&gt; 5  1 STOPBASE    30      4       0</span></span>
+<span id="cb4-9"><a aria-label="9"></a><span class="co">#&gt; 6  1 STOPBASE    31      5       0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -649,7 +652,7 @@ window.addEventListener("load", alignEquationAnchorsWithDefault);
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
