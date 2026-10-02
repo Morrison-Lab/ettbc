@@ -33,3 +33,4 @@
 ^\.positai$
 ^\.claude$
 ^SAS$
+^AGENTS\.md$
