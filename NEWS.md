@@ -1,5 +1,9 @@
 # ettbc (development version)
 
+* The documentation check no longer fails when a newer roxygen2 only rewrites
+  the `Config/roxygen2/version` or `RoxygenNote` field in `DESCRIPTION`.
+  It still fails on any other change to `DESCRIPTION`, `NAMESPACE`, or `man/`.
+
 * Updated the reusable GitHub Actions workflows to call `Morrison-Lab/gha`
   instead of `d-morrison/gha`, following that repository's move.
   Actions does not follow repository-rename redirects for `uses:`, so the
